@@ -96,7 +96,7 @@ export default function ProgressView({ user }: { user?: any }) {
           {data.weeklyActivity.map((d, i) => (
             <div key={i} className="flex-1 flex flex-col items-center gap-2">
               <span className="text-xs text-slate-400 font-bold">{d.minutes}m</span>
-              <div className="w-full rounded-t-lg bg-brand-red transition-all duration-700" style={{ height: `${(d.minutes / maxMinutes) * 80}px`, minHeight: d.minutes > 0 ? '4px' : '0' }} />
+              <div className="w-full rounded-t-lg bg-red-700 transition-all duration-700" style={{ height: `${(d.minutes / maxMinutes) * 80}px`, minHeight: d.minutes > 0 ? '4px' : '0' }} />
               <span className="text-xs text-slate-400 font-bold">{d.day}</span>
             </div>
           ))}

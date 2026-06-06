@@ -95,7 +95,7 @@ export default function DashboardView({ user, onViewChange }: { user: any; onVie
       </section>
 
       {/* Daily Tip from AI */}
-      <section className="bg-gradient-to-r from-brand-red to-red-700 rounded-3xl p-6 text-white relative overflow-hidden">
+      <section className="bg-gradient-to-r from-brand-red to-blue-900 rounded-3xl p-6 text-white relative overflow-hidden">
         <div className="absolute top-0 right-0 w-48 h-48 bg-white/5 rounded-full blur-2xl" />
         <p className="text-xs font-bold uppercase tracking-widest text-red-200 mb-2">Today's Phrase</p>
         <p className="text-3xl font-chinese font-bold mb-1">{data.dailyTip.chinese}</p>

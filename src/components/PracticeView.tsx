@@ -39,13 +39,13 @@ export default function PracticeView() {
               onClick={() => setSelectedScenario(s)}
               className="bg-white border border-slate-200 hover:border-brand-red rounded-3xl p-6 text-left transition-all hover:shadow-lg hover:shadow-red-50 group cursor-pointer"
             >
-              <div className="w-12 h-12 rounded-2xl bg-brand-red-light text-brand-red flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+              <div className="w-12 h-12 rounded-2xl bg-brand-red-light text-red-900 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                 <Icon className="w-6 h-6" />
               </div>
               <h3 className="font-bold text-lg text-slate-800">{s.title}</h3>
               <p className="text-sm text-slate-500 mt-2 line-clamp-2">{s.desc}</p>
               
-              <div className="mt-6 flex items-center text-xs font-bold text-brand-red uppercase tracking-widest gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+              <div className="mt-6 flex items-center text-xs font-bold text-red-900 uppercase tracking-widest gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                 <Mic2 className="w-4 h-4" /> Start Practice
               </div>
             </button>

@@ -5,16 +5,12 @@ import {
   Flame, Star, Target, Award, CheckCircle2, Sparkles
 } from 'lucide-react';
 
-interface UserData {
-  name: string;
-  studentId: string;
-  cohort: string;
-}
+import { type AppUser } from '../App';
 
 interface ProfileViewProps {
-  user: UserData;
+  user: AppUser;
   onLogout: () => void;
-  onUpdateUser: (updated: UserData) => void;
+  onUpdateUser: (updates: Partial<AppUser>) => Promise<void>;
 }
 
 const COHORTS = [
@@ -62,12 +58,13 @@ export default function ProfileView({ user, onLogout, onUpdateUser }: ProfileVie
   const [editName, setEditName]     = useState(user.name);
   const [editCohort, setEditCohort] = useState(user.cohort);
   const [saveMsg, setSaveMsg]       = useState('');
+  const [saveError, setSaveError]   = useState('');
   const [nameError, setNameError]   = useState('');
 
-  // ── Preferences stored in localStorage ───────────────────────
-  const [hskLevel, setHskLevel]           = useState<string>(prefs.hskLevel   || 'HSK 1');
-  const [dailyGoal, setDailyGoal]         = useState<number>(prefs.dailyGoal  || 10);
-  const [avatarColor, setAvatarColor]     = useState<number>(prefs.avatarColor || 0);
+  // ── Preferences — live values from Appwrite, local toggles from localStorage
+  const [hskLevel, setHskLevel]           = useState<string>(user.hskLevel   || 'HSK 1');
+  const [dailyGoal, setDailyGoal]         = useState<number>(user.dailyGoal  || 10);
+  const [avatarColor, setAvatarColor]     = useState<number>(user.avatarColor ?? 0);
   const [notifEnabled, setNotifEnabled]   = useState<boolean>(prefs.notif     ?? true);
   const [soundEnabled, setSoundEnabled]   = useState<boolean>(prefs.sound     ?? true);
   const [showGuide, setShowGuide]         = useState<boolean>(prefs.guide     ?? true);
@@ -75,22 +72,25 @@ export default function ProfileView({ user, onLogout, onUpdateUser }: ProfileVie
   // ── Confirm logout ────────────────────────────────────────────
   const [confirmLogout, setConfirmLogout] = useState(false);
 
-  // ── Stats (from localStorage progress cache if any) ───────────
-  const streak     = prefs.streak      ?? 7;
-  const words      = prefs.words       ?? 120;
-  const lessons    = prefs.lessons     ?? 8;
-  const score      = prefs.score       ?? 74;
+  // ── Stats — real values from Appwrite profile ───────────────
+  const streak  = user.streak           ?? 0;
+  const words   = user.wordsLearned     ?? 0;
+  const lessons = user.lessonsCompleted ?? 0;
+  const score   = prefs.score           ?? 74;
 
-  // ── Save profile edits ────────────────────────────────────────
-  const handleSave = () => {
+  // ── Save profile edits — persists to Appwrite ───────────────
+  const handleSave = async () => {
     if (!editName.trim()) { setNameError('Name cannot be empty.'); return; }
     setNameError('');
-    const updated = { ...user, name: editName.trim(), cohort: editCohort };
-    localStorage.setItem('hanyu_user', JSON.stringify(updated));
-    onUpdateUser(updated);
-    setEditing(false);
-    setSaveMsg('Profile updated!');
-    setTimeout(() => setSaveMsg(''), 3000);
+    setSaveError('');
+    try {
+      await onUpdateUser({ name: editName.trim(), cohort: editCohort });
+      setEditing(false);
+      setSaveMsg('Profile saved to database!');
+      setTimeout(() => setSaveMsg(''), 3000);
+    } catch {
+      setSaveError('Failed to save. Please try again.');
+    }
   };
 
   const handleCancelEdit = () => {
@@ -122,6 +122,11 @@ export default function ProfileView({ user, onLogout, onUpdateUser }: ProfileVie
           <CheckCircle2 className="w-4 h-4" /> {saveMsg}
         </div>
       )}
+      {saveError && (
+        <div className="flex items-center gap-2 px-4 py-3 bg-red-50 border border-red-200 rounded-2xl text-red-600 text-sm font-bold animate-in fade-in duration-200">
+          {saveError}
+        </div>
+      )}
 
       {/* ── Profile card ────────────────────────────────────── */}
       <div className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
@@ -144,6 +149,7 @@ export default function ProfileView({ user, onLogout, onUpdateUser }: ProfileVie
                   const next = (avatarColor + 1) % AVATAR_COLORS.length;
                   setAvatarColor(next);
                   savePref('avatarColor', next);
+                  onUpdateUser({ avatarColor: next });
                 }}
                 className="absolute -bottom-1 -right-1 w-6 h-6 bg-white rounded-full shadow border border-slate-200 flex items-center justify-center cursor-pointer hover:scale-110 transition-transform"
                 title="Change colour"
@@ -206,6 +212,9 @@ export default function ProfileView({ user, onLogout, onUpdateUser }: ProfileVie
           {/* Info pills */}
           <div className="flex flex-wrap gap-2 mt-4">
             <span className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-50 border border-slate-100 rounded-xl text-xs font-bold text-slate-600">
+              <Mail className="w-3.5 h-3.5 text-slate-400" /> {user.email}
+            </span>
+            <span className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-50 border border-slate-100 rounded-xl text-xs font-bold text-slate-600">
               <Hash className="w-3.5 h-3.5 text-slate-400" /> {user.studentId}
             </span>
             <span className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-50 border border-slate-100 rounded-xl text-xs font-bold text-slate-600">
@@ -256,7 +265,11 @@ export default function ProfileView({ user, onLogout, onUpdateUser }: ProfileVie
             </div>
             <select
               value={hskLevel}
-              onChange={e => { setHskLevel(e.target.value); savePref('hskLevel', e.target.value); }}
+              onChange={e => {
+                setHskLevel(e.target.value);
+                savePref('hskLevel', e.target.value);
+                onUpdateUser({ hskLevel: e.target.value });
+              }}
               className="px-3 py-2 rounded-xl border border-slate-200 text-sm font-bold text-slate-700 bg-white cursor-pointer focus:outline-none focus:border-brand-red"
             >
               {LEVELS.map(l => <option key={l} value={l}>{l}</option>)}
@@ -276,7 +289,7 @@ export default function ProfileView({ user, onLogout, onUpdateUser }: ProfileVie
               type="range"
               min={5} max={50} step={5}
               value={dailyGoal}
-              onChange={e => { const v = Number(e.target.value); setDailyGoal(v); savePref('dailyGoal', v); }}
+              onChange={e => { const v = Number(e.target.value); setDailyGoal(v); savePref('dailyGoal', v); onUpdateUser({ dailyGoal: v }); }}
               className="w-full accent-brand-red cursor-pointer"
             />
             <div className="flex justify-between text-[10px] text-slate-400 font-bold mt-1">

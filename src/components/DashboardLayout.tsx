@@ -15,12 +15,14 @@ import {
 } from 'lucide-react';
 import { motion } from 'motion/react';
 
+import { type AppUser } from '../App';
+
 export type ViewID = 'dashboard' | 'learn' | 'tutor' | 'practice' | 'vocabulary' | 'grammar' | 'hsk' | 'progress' | 'profile' | 'writing';
 
 interface LayoutProps {
   currentView: ViewID;
   setCurrentView: (view: ViewID) => void;
-  user: any;
+  user: AppUser;
   onLogout: () => void;
   children: React.ReactNode;
 }
@@ -44,14 +46,14 @@ export default function DashboardLayout({ currentView, setCurrentView, user, onL
       {/* Sidebar */}
       <aside className="w-64 bg-white border-r border-slate-200 flex flex-col hidden md:flex sticky top-0 h-screen shrink-0">
         <div className="p-6 shrink-0 flex items-center gap-3 border-b border-slate-100">
-          <div className="w-10 h-10 bg-brand-red rounded-xl flex items-center justify-center text-white font-chinese font-bold text-xl shadow-sm">
+          <div className="w-10 h-10 bg-red-700 rounded-xl flex items-center justify-center text-white font-chinese font-bold text-xl shadow-sm">
             汉
           </div>
           <div className="leading-tight">
-            <h1 className="font-display font-black text-slate-800 tracking-tight text-lg">
+            <h1 className="font-display font-black to-red-700 tracking-tight text-lg">
               HanYu AI
             </h1>
-            <p className="text-[10px] font-bold text-brand-red uppercase tracking-widest">
+            <p className="text-[10px] font-bold text-red-700 uppercase tracking-widest">
               Learn Chinese
             </p>
           </div>

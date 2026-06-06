@@ -9,8 +9,9 @@
   --font-chinese: "Noto Serif SC", "FZShuTi", serif;
   --font-mono: "JetBrains Mono", monospace;
   /* #547A95 */
-  --color-brand-red: #E60000;
-  --color-brand-red-dark: #cc0000;
+  /* #E60000 */
+  --color-brand-red: #111844;
+  --color-brand-red-dark: #232F72;
   --color-brand-red-light: #FFEDED;
   --color-brand-gold: #FFB800;
   --color-brand-gold-light: #FFF8E6;
