@@ -1,0 +1,8 @@
+{
+  "name": "HanYu AI",
+  "description": "A modern AI-powered Chinese learning platform designed to help international students learn Mandarin.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
