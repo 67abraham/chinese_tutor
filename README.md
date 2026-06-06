@@ -74,6 +74,4 @@ export default defineConfig([
 
 clone backend
 
-https://github.com/67abraham/chinese_tutor_backend.git
-
-https://fk7560zw-7090.uks1.devtunnels.ms/
+s#4k-proj-KZ_GtW-0nxtC0jv9-zYTFp-XhLxv73PG6FWLoOa4lQCCCWTfds1x10KOvjsGsdIZ63aGelizdOT3BlbkFJ2EMc4-96ryIzbOBXI3Jfu93qSkbi1xU3XzGC_eL78T9UO7q85qtfm_CGCsXEyyPLYbNh1_-GEA#4
