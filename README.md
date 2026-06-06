@@ -72,8 +72,6 @@ export default defineConfig([
 ])
 ```
 
-live share 
+clone backend
 
-https://prod.liveshare.vsengsaas.visualstudio.com/join?5AF6BA661D337BDF65E6117E70897641EDFA
-
-https://ai.studio/apps/81f6aadb-47ff-4fde-8480-1c18c7a731b8
+https://github.com/67abraham/chinese_tutor_backend.git
